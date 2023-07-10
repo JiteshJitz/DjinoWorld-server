@@ -30,11 +30,7 @@ public class NomadService {
         return nomadRepository.findById(nomadID).get();
     }
 
-//    public Nomad updateNomadEmail(Nomad nomadRequest){
-//        // get the existing document from DB
-//        //populate new value from request to exisiting object
-//        Nomad presentEmail = nomadRepository.findById(nomadRequest.setNomadID()).get();
-//    }
+//   Individual put
 
     public String deleteNomad(String nomadID){
         nomadRepository.deleteById(nomadID);
