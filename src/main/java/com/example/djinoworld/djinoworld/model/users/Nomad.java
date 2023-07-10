@@ -17,6 +17,49 @@ public class Nomad {
     private String location;
     private String email;
 
+    private String password;
+
+    @Override
+    public String toString() {
+        return "Nomad{" +
+                "nomadID='" + nomadID + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", location='" + location + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", occupation='" + occupation + '\'' +
+                '}';
+    }
+
+    public Nomad(String nomadID, String firstName, String lastName, String location, String email, String password, String occupation) {
+        this.nomadID = nomadID;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.location = location;
+        this.email = email;
+        this.password = password;
+        this.occupation = occupation;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    private String occupation;
+
     public Nomad() {
     }
 
@@ -68,14 +111,4 @@ public class Nomad {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Nomad{" +
-                "nomadID='" + nomadID + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", location='" + location + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }
