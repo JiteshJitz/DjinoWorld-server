@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://Jiteshru:I1ydRNNOIoq2EHi6@djinoworld-cluster.zksj6ck.mongodb.net/?retryWrites=true&w=majority
+      database: DjinoWorld
