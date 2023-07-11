@@ -1,26 +1,29 @@
 package com.example.djinoworld.djinoworld.model.users;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class CoWorkingSpace {
-
+@Document(collection = "accommodation")
+@Data
+public class Accommodation {
     /*
-     * Fields : coWorkingSpaceID, firstName, lastName, email, password, location, spaceID
+     * Fields : AccommodationID, firstName, lastName, email, password, location
      * */
 
     @Id
-    private String coWorkingSpaceID;
+    private String accommodationID;
     private String firstName;
     private String lastName;
     private String location;
     private String email;
     private String password;
 
-    public CoWorkingSpace() {
+    public Accommodation() {
     }
 
-    public CoWorkingSpace(String coWorkingSpaceID, String firstName, String lastName, String location, String email, String password) {
-        this.coWorkingSpaceID = coWorkingSpaceID;
+    public Accommodation(String accommodationID, String firstName, String lastName, String location, String email, String password) {
+        this.accommodationID = accommodationID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.location = location;
@@ -28,12 +31,12 @@ public class CoWorkingSpace {
         this.password = password;
     }
 
-    public String getCoWorkingSpaceID() {
-        return coWorkingSpaceID;
+    public String getAccommodationID() {
+        return accommodationID;
     }
 
-    public void setCoWorkingSpaceID(String coWorkingSpaceID) {
-        this.coWorkingSpaceID = coWorkingSpaceID;
+    public void setAccommodationID(String accommodationID) {
+        this.accommodationID = accommodationID;
     }
 
     public String getFirstName() {
@@ -78,8 +81,8 @@ public class CoWorkingSpace {
 
     @Override
     public String toString() {
-        return "CoWorkingSpace{" +
-                "coWorkingSpaceID='" + coWorkingSpaceID + '\'' +
+        return "Accommodation{" +
+                "accommodationID='" + accommodationID + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", location='" + location + '\'' +

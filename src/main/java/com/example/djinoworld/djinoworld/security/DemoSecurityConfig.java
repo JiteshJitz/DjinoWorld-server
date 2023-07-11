@@ -17,8 +17,6 @@ import javax.sql.DataSource;
 @Configuration
 public class DemoSecurityConfig {
 
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
