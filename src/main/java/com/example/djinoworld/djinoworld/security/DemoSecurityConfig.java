@@ -21,7 +21,7 @@ public class DemoSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(configurer -> configurer
-                .requestMatchers(HttpMethod.GET,"/users").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.GET,"/").hasRole("EMPLOYEE")
                 .requestMatchers(HttpMethod.GET,"/users/**").hasRole("EMPLOYEE")
                 .requestMatchers(HttpMethod.POST,"/users").hasRole("MANAGER")
                 .requestMatchers(HttpMethod.PUT,"/").hasRole("MANAGER")
