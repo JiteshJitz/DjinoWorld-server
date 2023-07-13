@@ -18,7 +18,6 @@ public class NomadService {
     // Crud create, read, update, delete
 
     public Nomad addNomad(Nomad nomad) {
-        nomad.setNomadID(UUID.randomUUID().toString());
         return nomadRepository.save(nomad);
     }
 

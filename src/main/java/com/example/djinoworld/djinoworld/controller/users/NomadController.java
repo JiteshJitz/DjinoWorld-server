@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/nomad")
+@RequestMapping("/api/nomad")
 public class NomadController {
 
     @Autowired
