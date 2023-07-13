@@ -1,7 +1,7 @@
 package com.example.djinoworld.djinoworld.service.users;
 
 
-import com.example.djinoworld.djinoworld.model.users.CoWorkingSpace;
+import com.example.djinoworld.djinoworld.model.CoWorkingSpace;
 import com.example.djinoworld.djinoworld.repository.users.CoWorkingSpaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

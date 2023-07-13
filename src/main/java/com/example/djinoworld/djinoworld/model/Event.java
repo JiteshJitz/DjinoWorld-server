@@ -16,9 +16,11 @@ public class Event {
      * Fields : EventCoordinatorID, firstName, lastName, email, password, location
      * */
 
-    @Id
+
     private String eventCoordinatorID;
 
+    // Make it unique or find a way to make it id
+    @Id
     private String eventID;
 
     private String eventName;

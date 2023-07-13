@@ -1,6 +1,6 @@
 package com.example.djinoworld.djinoworld.service.users;
 
-import com.example.djinoworld.djinoworld.model.users.Accommodation;
+import com.example.djinoworld.djinoworld.model.Accommodation;
 import com.example.djinoworld.djinoworld.repository.users.AccommodationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
