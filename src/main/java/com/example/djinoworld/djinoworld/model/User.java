@@ -20,6 +20,7 @@ public class User implements UserDetails {
     @Id
     private String id;
 
+    //Make it unique
     @NonNull
     private String username;
 

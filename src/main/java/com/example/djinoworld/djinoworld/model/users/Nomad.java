@@ -39,4 +39,7 @@ public class Nomad {
 
     private List<String> hobbies;
 
+    private List<String> listOfFriends;
+
+
 }
