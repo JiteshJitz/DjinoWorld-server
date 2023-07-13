@@ -37,10 +37,6 @@ public class NomadController {
         return service.deleteNomad(nomadId);
     }
 
-    // Test controller
-    @GetMapping("/hello")
-    public String helloWorld() {
-        return "Hello, World!";
-    }
+
 
 }

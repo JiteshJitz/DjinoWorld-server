@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 /*
 * Skills and Expertise {List}
 * Areas of Interest {List}
@@ -27,6 +29,14 @@ public class Nomad {
 
     private String work;
 
-    private String language;
+    private List<String> languages;
+
+    private List<String> skills;
+
+    private List<String> areaOfInterests;
+
+    private List<String> travelPreferences;
+
+    private List<String> hobbies;
 
 }
