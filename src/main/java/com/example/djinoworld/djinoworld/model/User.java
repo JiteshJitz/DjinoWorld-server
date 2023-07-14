@@ -39,6 +39,8 @@ public class User implements UserDetails {
     @NonNull
     private String location;
 
+    private String refreshToken;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.EMPTY_LIST;

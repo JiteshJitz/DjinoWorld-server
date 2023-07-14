@@ -114,8 +114,4 @@ public class WebSecurity {
         return provider;
     }
 
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 }
