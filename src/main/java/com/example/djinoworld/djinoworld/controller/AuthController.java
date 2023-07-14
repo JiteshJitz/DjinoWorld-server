@@ -1,5 +1,6 @@
 package com.example.djinoworld.djinoworld.controller;
 import com.example.djinoworld.djinoworld.dto.LoginDTO;
+import com.example.djinoworld.djinoworld.dto.LogoutDTO;
 import com.example.djinoworld.djinoworld.dto.SignupDTO;
 import com.example.djinoworld.djinoworld.dto.TokenDTO;
 import com.example.djinoworld.djinoworld.exception.CustomException;
@@ -106,6 +107,24 @@ public class AuthController {
         // check if present in db and not revoked, etc
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity logout(@RequestBody LogoutDTO logoutDTO) {
+        // Retrieve the user from the database
+        Optional<User> optionalUser = userRepository.findByUsername(logoutDTO.getUsername());
+        if (optionalUser.isEmpty()) {
+            throw new CustomException("User not found.", HttpStatus.NOT_FOUND);
+        }
+        User user = optionalUser.get();
+
+        // Clear the refresh token
+        user.setRefreshToken(null);
+
+        // Save the user without the refresh token
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Logout successful");
     }
 
 }
