@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -51,19 +52,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody SignupDTO signupDTO) {
         User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getUserType(), signupDTO.getFullName(), signupDTO.getLocation());
-
         userDetailsManager.createUser(user);
 
         Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
 
-        TokenDTO tokenDTO = tokenGenerator.createToken(authentication);
-        String refreshToken = tokenDTO.getRefreshToken();
-        user.setRefreshToken(refreshToken);
-
-        // Save the user with the refresh token in your database
-        userRepository.save(user);
-
-        return ResponseEntity.ok(tokenDTO);
+        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
 
 
@@ -72,7 +65,24 @@ public class AuthController {
 
         try {
             Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
-            return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+            TokenDTO tokenDTO = tokenGenerator.createToken(authentication);
+            String refreshToken = tokenDTO.getRefreshToken();
+
+            // Retrieve the user from the database
+            Optional<User> optionalUser = userRepository.findByUsername(loginDTO.getUsername());
+            if (optionalUser.isEmpty()) {
+                throw new CustomException("User not found.", HttpStatus.NOT_FOUND);
+            }
+            User user = optionalUser.get();
+
+            // Set the refresh token in the user object
+            user.setRefreshToken(refreshToken);
+
+            // Save the user with the refresh token in the database
+            userRepository.save(user);
+
+            return ResponseEntity.ok(tokenDTO);
+
         } catch (AuthenticationException ex) {
             // Handle specific authentication exceptions
             if (ex instanceof DisabledException) {
@@ -86,8 +96,8 @@ public class AuthController {
                 throw new CustomException("Authentication failed.", HttpStatus.UNAUTHORIZED);
             }
         }
-
     }
+
 
     @PostMapping("/token")
     public ResponseEntity token(@RequestBody TokenDTO tokenDTO) {
@@ -97,8 +107,5 @@ public class AuthController {
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
-
-
-
 
 }
