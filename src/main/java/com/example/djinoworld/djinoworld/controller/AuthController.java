@@ -81,7 +81,7 @@ public class AuthController {
         }
 
         // If username and email do not exist, create new user
-        User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getUserType(), signupDTO.getFullName(), signupDTO.getLocation());
+        User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getRole(), signupDTO.getFullName(), signupDTO.getLocation());
         userDetailsManager.createUser(user);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), Collections.EMPTY_LIST);

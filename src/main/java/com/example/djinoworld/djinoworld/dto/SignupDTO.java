@@ -1,5 +1,6 @@
 package com.example.djinoworld.djinoworld.dto;
 
+import com.example.djinoworld.djinoworld.model.Role;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -10,7 +11,7 @@ public class SignupDTO {
     private String username;
     private String password;
     private String email;
-    private String userType;
+    private Role role;
     private String fullName;
     private String location;
 }

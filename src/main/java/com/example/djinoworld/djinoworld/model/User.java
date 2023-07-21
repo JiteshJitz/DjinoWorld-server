@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,9 +44,22 @@ public class User implements UserDetails {
 
     private String refreshToken;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public User(String username, String password, String email, Role role, String fullName, String location) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.fullName = fullName;
+        this.location = location;
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.EMPTY_LIST;
+        return role.getAuthorities();
     }
 
     @Override
