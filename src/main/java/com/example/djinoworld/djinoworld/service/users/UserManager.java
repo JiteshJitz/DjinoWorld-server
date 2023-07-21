@@ -48,6 +48,15 @@ public class UserManager implements UserDetailsManager {
         return userRepository.existsByUsername(username);
     }
 
+
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        MessageFormat.format("User with email {0} not found", email)
+                ));
+    }
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
@@ -55,4 +64,6 @@ public class UserManager implements UserDetailsManager {
                         MessageFormat.format("username {0} not found", username)
                 ));
     }
+
+
 }

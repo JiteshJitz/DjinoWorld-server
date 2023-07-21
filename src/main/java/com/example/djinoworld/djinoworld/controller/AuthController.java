@@ -7,6 +7,7 @@ import com.example.djinoworld.djinoworld.exception.CustomException;
 import com.example.djinoworld.djinoworld.model.User;
 import com.example.djinoworld.djinoworld.repository.users.UserRepository;
 import com.example.djinoworld.djinoworld.security.TokenGenerator;
+import com.example.djinoworld.djinoworld.service.users.UserManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
@@ -37,6 +39,10 @@ import java.util.Optional;
 public class AuthController {
     @Autowired
     UserDetailsManager userDetailsManager;
+
+    @Autowired
+    UserManager userManager;
+
     @Autowired
     TokenGenerator tokenGenerator;
 
@@ -52,22 +58,37 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody SignupDTO signupDTO) {
-        // Check if user already exists
-        UserDetails existingUser = userDetailsManager.loadUserByUsername(signupDTO.getUsername());
-
-        if (existingUser != null) {
-            // If user exists, return appropriate response
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already in use");
-        } else {
-            // If user does not exist, create new user
-            User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getUserType(), signupDTO.getFullName(), signupDTO.getLocation());
-            userDetailsManager.createUser(user);
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
-
-            return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        UserDetails existingUserByUsername = null;
+        try {
+            existingUserByUsername = userManager.loadUserByUsername(signupDTO.getUsername());
+        } catch (UsernameNotFoundException e) {
+            // do nothing if user not found
         }
+
+        if (existingUserByUsername != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already in use");
+        }
+
+        UserDetails existingUserByEmail = null;
+        try {
+            existingUserByEmail = userManager.loadUserByEmail(signupDTO.getEmail());
+        } catch (UsernameNotFoundException e) {
+            // do nothing if user not found
+        }
+
+        if (existingUserByEmail != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
+        }
+
+        // If username and email do not exist, create new user
+        User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getUserType(), signupDTO.getFullName(), signupDTO.getLocation());
+        userDetailsManager.createUser(user);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
+
+        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
+
 
 
 
