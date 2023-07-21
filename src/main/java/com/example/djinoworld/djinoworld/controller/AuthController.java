@@ -98,18 +98,26 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
-
         try {
             Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
-            TokenDTO tokenDTO = tokenGenerator.createToken(authentication);
-            String refreshToken = tokenDTO.getRefreshToken();
+            System.out.println("Authentication" + authentication);
+            if (authentication == null) {
+                throw new CustomException("Authentication object is null.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
             // Retrieve the user from the database
             Optional<User> optionalUser = userRepository.findByUsername(loginDTO.getUsername());
+            System.out.println("User name " + optionalUser);
             if (optionalUser.isEmpty()) {
                 throw new CustomException("User not found.", HttpStatus.NOT_FOUND);
             }
             User user = optionalUser.get();
+
+            // Create a token with the authentication and user
+            TokenDTO tokenDTO = tokenGenerator.createToken2(authentication, user);
+            System.out.println("tokenDTO" + tokenDTO);
+            String refreshToken = tokenDTO.getRefreshToken();
+            System.out.println("refresh token" + refreshToken);
 
             // Set the refresh token in the user object
             user.setRefreshToken(refreshToken);
@@ -118,7 +126,6 @@ public class AuthController {
             userRepository.save(user);
 
             return ResponseEntity.ok(tokenDTO);
-
         } catch (AuthenticationException ex) {
             // Handle specific authentication exceptions
             if (ex instanceof DisabledException) {
@@ -135,14 +142,48 @@ public class AuthController {
     }
 
 
+
+
     @PostMapping("/token")
     public ResponseEntity token(@RequestBody TokenDTO tokenDTO) {
         Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken()));
         Jwt jwt = (Jwt) authentication.getCredentials();
-        // check if present in db and not revoked, etc
-
+        // check if present in db and not revoked,
+        System.out.println("Authentication " + authentication);
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }
+
+    @PostMapping("/token2")
+    public ResponseEntity token2(@RequestBody TokenDTO tokenDTO) {
+        Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(tokenDTO.getRefreshToken()));
+        Optional<UserDetails> userDetailsOptional = (Optional<UserDetails>) authentication.getPrincipal();
+
+        // Make sure the Optional<UserDetails> is present
+        if(userDetailsOptional.isEmpty()){
+            throw new CustomException("User not found in principal.", HttpStatus.NOT_FOUND);
+        }
+
+        UserDetails userDetails = userDetailsOptional.get();
+
+        // Fetch the user from the database
+        Optional<User> optionalUser = userRepository.findByUsername(userDetails.getUsername());
+        if (optionalUser.isEmpty()) {
+            throw new CustomException("User not found.", HttpStatus.NOT_FOUND);
+        }
+        User user = optionalUser.get();
+
+        // Generate a new token
+        TokenDTO newToken = tokenGenerator.createToken3(authentication, user);
+
+        return ResponseEntity.ok(newToken);
+    }
+
+
+
+
+
+
+
 
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestBody LogoutDTO logoutDTO) {

@@ -22,7 +22,7 @@ public class JwtToUserConverter implements Converter<Jwt, UsernamePasswordAuthen
     @Override
     public UsernamePasswordAuthenticationToken convert(Jwt jwt) {
         System.out.println("jwt"+ jwt);
-        System.out.println("JWT Claims: " + jwt.getClaims());
+        //System.out.println("JWT Claims: " + jwt.getClaims());
 
         String userId = jwt.getSubject();
         Optional<User> user = userRepository.findById(userId); // assuming you have a method like this in userRepository

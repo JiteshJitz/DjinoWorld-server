@@ -34,9 +34,6 @@ public class User implements UserDetails {
     private String email;
 
     @NonNull
-    private String userType;
-
-    @NonNull
     private String fullName;
 
     @NonNull
