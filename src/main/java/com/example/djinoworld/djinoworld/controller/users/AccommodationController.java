@@ -1,19 +1,29 @@
 package com.example.djinoworld.djinoworld.controller.users;
 
 import com.example.djinoworld.djinoworld.model.Accommodation;
+import com.example.djinoworld.djinoworld.model.User;
+import com.example.djinoworld.djinoworld.repository.users.UserRepository;
 import com.example.djinoworld.djinoworld.service.users.AccommodationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/accommodation")
+@RequestMapping("/api/v1/management/accommodation")
 public class AccommodationController {
 
     @Autowired
     private AccommodationService service;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

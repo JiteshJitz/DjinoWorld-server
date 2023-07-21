@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -31,7 +32,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -83,8 +86,9 @@ public class AuthController {
         // If username and email do not exist, create new user
         User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getRole(), signupDTO.getFullName(), signupDTO.getLocation());
         userDetailsManager.createUser(user);
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
+        List<GrantedAuthority> authorities = new ArrayList<>(user.getAuthorities());
+        System.out.println("authorities" + authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), authorities);
 
         return ResponseEntity.ok(tokenGenerator.createToken(authentication));
     }

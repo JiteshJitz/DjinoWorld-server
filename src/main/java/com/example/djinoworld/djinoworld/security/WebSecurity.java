@@ -51,6 +51,7 @@ public class WebSecurity {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/*").permitAll()
 
@@ -73,8 +74,6 @@ public class WebSecurity {
 
                         .anyRequest().authenticated()
                 )
-
-
 
                 .csrf().disable()
                 .cors().disable()
