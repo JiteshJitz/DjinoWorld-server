@@ -23,6 +23,13 @@ import java.util.Optional;
 
 @Component
 public class TokenGenerator {
+
+
+    // For rename
+    // Token - Register
+    // Token2 - Login
+    // Token - Get token back
+
     @Autowired
     JwtEncoder accessTokenEncoder;
 
@@ -268,8 +275,4 @@ public class TokenGenerator {
         return tokenDTO;
     }
 
-    // For rename
-    // Token - Register
-    // Token2 - Login
-    // Token - Get token back
 }
