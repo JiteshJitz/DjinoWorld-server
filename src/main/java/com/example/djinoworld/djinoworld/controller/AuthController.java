@@ -52,13 +52,23 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody SignupDTO signupDTO) {
-        User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getUserType(), signupDTO.getFullName(), signupDTO.getLocation());
-        userDetailsManager.createUser(user);
+        // Check if user already exists
+        UserDetails existingUser = userDetailsManager.loadUserByUsername(signupDTO.getUsername());
 
-        Authentication authentication = UsernamePasswordAuthenticationToken.authenticated(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
+        if (existingUser != null) {
+            // If user exists, return appropriate response
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already in use");
+        } else {
+            // If user does not exist, create new user
+            User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getUserType(), signupDTO.getFullName(), signupDTO.getLocation());
+            userDetailsManager.createUser(user);
 
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), Collections.EMPTY_LIST);
+
+            return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        }
     }
+
 
 
     @PostMapping("/login")
