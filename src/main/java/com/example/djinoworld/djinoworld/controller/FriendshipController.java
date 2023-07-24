@@ -25,6 +25,13 @@ public class FriendshipController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/request/{id}")
+    public ResponseEntity<String> rejectFriendRequest(@PathVariable String id) {
+        String response = friendshipService.rejectFriendRequest(id);
+        return ResponseEntity.ok(response);
+    }
+
+
 
     // Additional methods for accepting/rejecting friend requests, viewing a user's friend requests, etc.
 }

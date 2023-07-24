@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FriendshipService {
@@ -110,6 +111,29 @@ public class FriendshipService {
 
         return "Friend request accepted successfully.";
     }
+
+    public String rejectFriendRequest(String friendshipId) {
+        // find friendship by id
+        Optional<Friendship> friendshipOptional = friendshipRepository.findById(friendshipId);
+
+        if (friendshipOptional.isPresent()) {
+            Friendship friendship = friendshipOptional.get();
+            // find receiver and remove the friendshipId from listOfFriendships
+            Nomad receiver = nomadRepository.findById(friendship.getReceiverId()).orElse(null);
+            if (receiver != null) {
+                receiver.getListOfFriendships().remove(friendshipId);
+                nomadRepository.save(receiver);
+            }
+
+            // delete the friendship
+            friendshipRepository.deleteById(friendshipId);
+
+            return "Friend request rejected successfully.";
+        } else {
+            return "No friend request found with the provided id.";
+        }
+    }
+
 
 
     /*Cases:
