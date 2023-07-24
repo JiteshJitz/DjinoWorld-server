@@ -19,5 +19,11 @@ public class FriendshipController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/accept/{friendshipId}/{receiverId}")
+    public ResponseEntity<String> acceptFriendRequest(@PathVariable String friendshipId, @PathVariable String receiverId) {
+        String response = friendshipService.acceptFriendRequest(friendshipId, receiverId);
+        return ResponseEntity.ok(response);
+    }
+
     // Additional methods for accepting/rejecting friend requests, viewing a user's friend requests, etc.
 }

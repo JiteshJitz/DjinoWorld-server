@@ -55,6 +55,57 @@ public class FriendshipService {
         }
     }
 
+    public String acceptFriendRequest(String friendshipId, String receiverId) {
+        // Find the friendship request in the database
+        Friendship friendship = friendshipRepository.findById(friendshipId).orElse(null);
+
+        if (friendship == null) {
+            // Handle case where friendship request does not exist
+            // Return an error message or throw an exception
+            return "Friendship request does not exist.";
+        }
+
+        // Make sure the user accepting the request is the receiver of the request
+        if (!friendship.getReceiverId().equals(receiverId)) {
+            // Handle case where user is not the receiver of the friend request
+            // Return an error message or throw an exception
+            return "You are not the receiver of this friend request.";
+        }
+
+        // Update the friendship to reflect that it's been accepted
+        friendship.setAccepted(true);
+        friendshipRepository.save(friendship);
+
+        // Add the sender to the receiver's friends list
+        Nomad receiver = nomadRepository.findById(receiverId).orElse(null);
+        if (receiver == null) {
+            // Handle case where receiver does not exist
+            // Return an error message or throw an exception
+            return "Receiver does not exist.";
+        }
+
+        if (!receiver.getListOfFriends().contains(friendship.getSenderId())) {
+            receiver.getListOfFriends().add(friendship.getSenderId());
+            nomadRepository.save(receiver);
+        }
+
+        // Optionally, also add the receiver to the sender's friends list
+        Nomad sender = nomadRepository.findById(friendship.getSenderId()).orElse(null);
+        if (sender == null) {
+            // Handle case where sender does not exist
+            // Return an error message or throw an exception
+            return "Sender does not exist.";
+        }
+
+        if (!sender.getListOfFriends().contains(receiverId)) {
+            sender.getListOfFriends().add(receiverId);
+            nomadRepository.save(sender);
+        }
+
+        return "Friend request accepted successfully.";
+    }
+
+
 
 
     // Further methods like accepting or rejecting a friend request can be implemented here
