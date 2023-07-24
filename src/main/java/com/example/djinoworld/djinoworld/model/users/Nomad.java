@@ -41,5 +41,6 @@ public class Nomad {
 
     private List<String> listOfFriends;
 
+    private List<String> listOfFriendRequests;
 
 }
