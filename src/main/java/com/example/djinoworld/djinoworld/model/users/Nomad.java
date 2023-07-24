@@ -22,10 +22,14 @@ import java.util.List;
 @Data
 @Getter
 @Setter
+@NoArgsConstructor
 public class Nomad {
 
     @Id
     private String nomadID;
+
+    @NonNull
+    private String userID;
 
     private String work;
 

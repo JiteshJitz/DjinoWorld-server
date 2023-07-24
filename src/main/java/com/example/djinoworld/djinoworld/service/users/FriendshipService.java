@@ -138,9 +138,10 @@ public class FriendshipService {
 
     /*Cases:
         1. Send the friend request
-        2. Accept the friend request
+        2. Accept/Reject the friend request
         3. If user has already sent the friend request
         4. If the user already a friend
+        5. Not done - If the user sending the friend request to a person who has already sent the friend request
 
      */
 

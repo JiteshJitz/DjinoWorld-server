@@ -1,6 +1,8 @@
 package com.example.djinoworld.djinoworld.controller.users;
 
 
+import com.example.djinoworld.djinoworld.dto.NomadUserInfo;
+import com.example.djinoworld.djinoworld.model.User;
 import com.example.djinoworld.djinoworld.model.users.Nomad;
 import com.example.djinoworld.djinoworld.service.users.NomadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class NomadController {
         return service.deleteNomad(nomadId);
     }
 
-
+    @GetMapping("/info/{nomadId}")
+    public NomadUserInfo getNomadAndUser(@PathVariable String nomadId){
+        return service.getNomadAndUserByNomadID(nomadId);
+    }
 
 }

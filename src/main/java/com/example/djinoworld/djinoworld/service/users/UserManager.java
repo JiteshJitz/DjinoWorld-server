@@ -12,6 +12,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.Optional;
 
 @Service
 public class UserManager implements UserDetailsManager {
@@ -46,6 +47,10 @@ public class UserManager implements UserDetailsManager {
     @Override
     public boolean userExists(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
     }
 
 
