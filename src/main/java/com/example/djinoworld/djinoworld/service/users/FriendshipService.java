@@ -28,8 +28,12 @@ public class FriendshipService {
             return "Sender or receiver does not exist.";
         }
 
-        // Check if friendship already exists
-// Check if friendship already exists
+        // Check if receiver is already in sender's friend list
+        if (sender.getListOfFriends().contains(receiver.getNomadID())) {
+            return "This user is already your friend.";
+        }
+
+
         List<Friendship> existingFriendships = friendshipRepository.findBySenderIdAndReceiverId(
                 sender.getNomadID(),
                 receiver.getNomadID()
@@ -56,55 +60,65 @@ public class FriendshipService {
     }
 
     public String acceptFriendRequest(String friendshipId, String receiverId) {
-        // Find the friendship request in the database
+        // find friendship
         Friendship friendship = friendshipRepository.findById(friendshipId).orElse(null);
 
         if (friendship == null) {
-            // Handle case where friendship request does not exist
-            // Return an error message or throw an exception
-            return "Friendship request does not exist.";
+            // Handle case where friendship does not exist
+            return "Friendship does not exist.";
         }
 
-        // Make sure the user accepting the request is the receiver of the request
+
         if (!friendship.getReceiverId().equals(receiverId)) {
-            // Handle case where user is not the receiver of the friend request
-            // Return an error message or throw an exception
-            return "You are not the receiver of this friend request.";
+            // Handle case where receiver is not the one accepting the friend request
+            return "Only the receiver can accept the friend request.";
         }
 
-        // Update the friendship to reflect that it's been accepted
-        friendship.setAccepted(true);
-        friendshipRepository.save(friendship);
-
-        // Add the sender to the receiver's friends list
-        Nomad receiver = nomadRepository.findById(receiverId).orElse(null);
-        if (receiver == null) {
-            // Handle case where receiver does not exist
-            // Return an error message or throw an exception
-            return "Receiver does not exist.";
+        if (friendship.isAccepted()) {
+            // Handle case where friend request has already been accepted
+            return "Friend request already accepted.";
         }
 
-        if (!receiver.getListOfFriends().contains(friendship.getSenderId())) {
-            receiver.getListOfFriends().add(friendship.getSenderId());
-            nomadRepository.save(receiver);
-        }
-
-        // Optionally, also add the receiver to the sender's friends list
+        // Find sender and receiver
         Nomad sender = nomadRepository.findById(friendship.getSenderId()).orElse(null);
-        if (sender == null) {
-            // Handle case where sender does not exist
-            // Return an error message or throw an exception
-            return "Sender does not exist.";
+        Nomad receiver = nomadRepository.findById(receiverId).orElse(null);
+
+        if (sender == null || receiver == null) {
+            // Handle case where sender or receiver does not exist
+            return "Sender or receiver does not exist.";
         }
 
+
+
+        // Add each other to friends list
         if (!sender.getListOfFriends().contains(receiverId)) {
             sender.getListOfFriends().add(receiverId);
             nomadRepository.save(sender);
         }
 
+        if (!receiver.getListOfFriends().contains(sender.getNomadID())) {
+            receiver.getListOfFriends().add(sender.getNomadID());
+            nomadRepository.save(receiver);
+        }
+
+        // Remove friendship from listOfFriendships and set friendship to accepted
+        receiver.getListOfFriendships().remove(friendshipId);
+        nomadRepository.save(receiver);
+
+        // Delete the friendship from the Friendship collection
+        friendshipRepository.delete(friendship);
+
         return "Friend request accepted successfully.";
     }
 
+
+    /*Cases:
+        1. Send the friend request
+        2. Accept the friend request
+        3. If user has already sent the friend request
+        4. If the user already a friend
+
+     */
 
 
 

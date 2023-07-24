@@ -25,5 +25,6 @@ public class FriendshipController {
         return ResponseEntity.ok(response);
     }
 
+
     // Additional methods for accepting/rejecting friend requests, viewing a user's friend requests, etc.
 }
