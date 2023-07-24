@@ -28,7 +28,7 @@ public class TokenGenerator {
     // For rename
     // Token - Register
     // Token2 - Login
-    // Token - Get token back
+    // Token3 - Get token back
 
     @Autowired
     JwtEncoder accessTokenEncoder;
