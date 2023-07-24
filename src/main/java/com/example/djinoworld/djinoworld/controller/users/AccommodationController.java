@@ -1,9 +1,11 @@
 package com.example.djinoworld.djinoworld.controller.users;
 
+import com.example.djinoworld.djinoworld.dto.UserAccommodationsResponseDTO;
 import com.example.djinoworld.djinoworld.model.Accommodation;
 import com.example.djinoworld.djinoworld.model.User;
 import com.example.djinoworld.djinoworld.repository.users.UserRepository;
 import com.example.djinoworld.djinoworld.service.users.AccommodationService;
+import com.example.djinoworld.djinoworld.service.users.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,13 +19,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/management/accommodation")
+@RequestMapping("/api/accommodation")
 public class AccommodationController {
 
     @Autowired
     private AccommodationService service;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserManager userService; // Ensure to add UserService
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,6 +50,9 @@ public class AccommodationController {
         return service.deleteAccommodation(accommodationID);
     }
 
-
+    @GetMapping("/{userId}/accommodations")
+    public UserAccommodationsResponseDTO getUserAndAccommodations(@PathVariable String userId) {
+        return userService.getUserAndAccommodationInfo(userId);
+    }
 
 }

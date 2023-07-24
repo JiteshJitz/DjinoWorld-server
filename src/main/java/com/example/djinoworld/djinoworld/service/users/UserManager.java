@@ -1,5 +1,9 @@
 package com.example.djinoworld.djinoworld.service.users;
 
+import com.example.djinoworld.djinoworld.dto.AccommodationResponseDTO;
+import com.example.djinoworld.djinoworld.dto.UserAccommodationsResponseDTO;
+import com.example.djinoworld.djinoworld.dto.UserResponseDTO;
+import com.example.djinoworld.djinoworld.model.Accommodation;
 import com.example.djinoworld.djinoworld.model.User;
 import com.example.djinoworld.djinoworld.repository.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,9 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserManager implements UserDetailsManager {
@@ -21,6 +27,10 @@ public class UserManager implements UserDetailsManager {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AccommodationService accommodationService;
+
 
 
     @Override
@@ -72,6 +82,17 @@ public class UserManager implements UserDetailsManager {
                 ));
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
+    }
+
+    public UserAccommodationsResponseDTO getUserAndAccommodationInfo(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        List<Accommodation> accommodations = accommodationService.getAccommodationByOwnerID(userId);
+        UserResponseDTO userResponseDTO = UserResponseDTO.fromUser(user);
+        List<AccommodationResponseDTO> accommodationResponses = accommodations.stream()
+                .map(AccommodationResponseDTO::new)
+                .collect(Collectors.toList());
+        return new UserAccommodationsResponseDTO(userResponseDTO, accommodationResponses);
     }
 
 

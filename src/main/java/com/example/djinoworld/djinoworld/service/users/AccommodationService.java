@@ -36,4 +36,10 @@ public class AccommodationService {
         return "This user has been deleted " + accommodationID;
     }
 
+    public List<Accommodation> getAccommodationByOwnerID(String ownerId) {
+        return accommodationRepository.findByOwnerID(ownerId);
+    }
+
+
+
 }

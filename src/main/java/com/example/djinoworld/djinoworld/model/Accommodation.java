@@ -1,7 +1,9 @@
 package com.example.djinoworld.djinoworld.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Document(collection = "Accommodation")
 @Data
+@Getter
+@Setter
 public class Accommodation {
     /*
        Type: Hostels / Homestay / Short term, long term rentals for digital nomads / Hotels with includes Wi-Fi,  Homes and Others
