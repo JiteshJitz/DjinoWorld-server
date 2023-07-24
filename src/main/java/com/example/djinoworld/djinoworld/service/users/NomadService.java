@@ -2,6 +2,7 @@ package com.example.djinoworld.djinoworld.service.users;
 
 
 import com.example.djinoworld.djinoworld.dto.NomadUserInfo;
+import com.example.djinoworld.djinoworld.dto.UserResponseDTO;
 import com.example.djinoworld.djinoworld.model.User;
 import com.example.djinoworld.djinoworld.model.users.Nomad;
 import com.example.djinoworld.djinoworld.repository.users.NomadRepository;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.example.djinoworld.djinoworld.dto.UserResponseDTO.fromUser;
 
 @Service
 public class NomadService {
@@ -48,13 +51,15 @@ public class NomadService {
 
     public NomadUserInfo getNomadAndUserByNomadID(String nomadID){
         Nomad nomad = nomadRepository.findById(nomadID).get();
-        Optional<User> userOpt = userService.findById(nomad.getUserID());  // Update this line
+        Optional<User> userOpt = userService.findById(nomad.getUserID());
         if (userOpt.isPresent()) {
-            return new NomadUserInfo(nomad, userOpt.get());
+            UserResponseDTO userResponse = fromUser(userOpt.get());
+            return new NomadUserInfo(nomad, userResponse);
         } else {
             throw new RuntimeException("User not found");
         }
     }
+
 
 
 }

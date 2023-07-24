@@ -11,18 +11,22 @@ import lombok.Setter;
 public class NomadUserInfo {
 
     private Nomad nomad;
-    private User user;
 
-    public NomadUserInfo(Nomad nomad, User user) {
+    private UserResponseDTO userResponse;
+
+    public NomadUserInfo(Nomad nomad, UserResponseDTO userResponse) {
         this.nomad = nomad;
-        this.user = user;
+        this.userResponse = userResponse;
     }
 
-    public Nomad getNomad() {
-        return nomad;
+    private UserResponseDTO fromUser(User user) {
+        return new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail(), user.getFullName(), user.getLocation());
     }
 
-    public User getUser() {
-        return user;
-    }
+
+
+
+
+
+
 }
