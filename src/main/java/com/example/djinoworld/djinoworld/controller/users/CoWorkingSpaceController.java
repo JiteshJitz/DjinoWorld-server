@@ -1,7 +1,9 @@
 package com.example.djinoworld.djinoworld.controller.users;
 
+import com.example.djinoworld.djinoworld.dto.UserCoWorkingSpacesResponseDTO;
 import com.example.djinoworld.djinoworld.model.CoWorkingSpace;
 import com.example.djinoworld.djinoworld.service.users.CoWorkingSpaceService;
+import com.example.djinoworld.djinoworld.service.users.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ public class CoWorkingSpaceController {
 
     @Autowired
     private CoWorkingSpaceService service;
+
+    @Autowired
+    private UserManager userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,6 +39,11 @@ public class CoWorkingSpaceController {
     @DeleteMapping
     public String deleteCoWorkingSpace(String coWorkingSpaceID){
         return service.deleteCoWorkingSpace(coWorkingSpaceID);
+    }
+
+    @GetMapping("/{userId}/coworkingspace")
+    public UserCoWorkingSpacesResponseDTO getUserAndCoWorkingSpaces(@PathVariable String userId) {
+        return userService.getUserAndCoWorkingSpacesInfo(userId);
     }
 
 

@@ -1,12 +1,14 @@
 package com.example.djinoworld.djinoworld.service.users;
 
 
+import com.example.djinoworld.djinoworld.dto.CoWorkingSpaceResponseDTO;
 import com.example.djinoworld.djinoworld.model.CoWorkingSpace;
 import com.example.djinoworld.djinoworld.repository.users.CoWorkingSpaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CoWorkingSpaceService {
@@ -35,5 +37,18 @@ public class CoWorkingSpaceService {
         coWorkingSpaceRepository.deleteById(coWorkingSpaceID);
         return "This user has been deleted " + coWorkingSpaceID;
     }
+
+    public List<CoWorkingSpaceResponseDTO> getCoWorkingSpacesByOwnerID(String ownerId) {
+        List<CoWorkingSpace> coWorkingSpaces = coWorkingSpaceRepository.findByOwnerId(ownerId);
+        return coWorkingSpaces.stream()
+                .map(CoWorkingSpaceResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
+
 
 }

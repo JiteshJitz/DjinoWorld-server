@@ -1,8 +1,6 @@
 package com.example.djinoworld.djinoworld.service.users;
 
-import com.example.djinoworld.djinoworld.dto.AccommodationResponseDTO;
-import com.example.djinoworld.djinoworld.dto.UserAccommodationsResponseDTO;
-import com.example.djinoworld.djinoworld.dto.UserResponseDTO;
+import com.example.djinoworld.djinoworld.dto.*;
 import com.example.djinoworld.djinoworld.model.Accommodation;
 import com.example.djinoworld.djinoworld.model.User;
 import com.example.djinoworld.djinoworld.repository.users.UserRepository;
@@ -30,6 +28,9 @@ public class UserManager implements UserDetailsManager {
 
     @Autowired
     private AccommodationService accommodationService;
+
+    @Autowired
+    private CoWorkingSpaceService coWorkingSpaceService;
 
 
 
@@ -95,6 +96,12 @@ public class UserManager implements UserDetailsManager {
         return new UserAccommodationsResponseDTO(userResponseDTO, accommodationResponses);
     }
 
-
+    public UserCoWorkingSpacesResponseDTO getUserAndCoWorkingSpacesInfo(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserResponseDTO userResponseDTO = UserResponseDTO.fromUser(user);
+        List<CoWorkingSpaceResponseDTO> coWorkingSpaceResponseDTOs = coWorkingSpaceService.getCoWorkingSpacesByOwnerID(userId);
+        return new UserCoWorkingSpacesResponseDTO(userResponseDTO, coWorkingSpaceResponseDTOs);
+    }
 
 }
