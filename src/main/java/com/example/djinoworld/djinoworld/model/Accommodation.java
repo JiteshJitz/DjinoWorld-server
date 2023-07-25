@@ -37,6 +37,12 @@ public class Accommodation {
     private String address;
 
     @NonNull
+    private String city;
+
+    @NonNull
+    private String country;
+
+    @NonNull
     private String accommodationType;
 
     @NonNull

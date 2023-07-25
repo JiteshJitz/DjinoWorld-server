@@ -32,6 +32,12 @@ public class CoWorkingSpace {
     private String address;
 
     @NonNull
+    private String city;
+
+    @NonNull
+    private String country;
+
+    @NonNull
     private String spaceType;
 
     @NonNull

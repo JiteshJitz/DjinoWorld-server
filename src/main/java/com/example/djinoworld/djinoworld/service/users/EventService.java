@@ -1,5 +1,7 @@
 package com.example.djinoworld.djinoworld.service.users;
-
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import com.example.djinoworld.djinoworld.dto.EventCoordinatorEventsInfo;
 import com.example.djinoworld.djinoworld.dto.EventResponseDTO;
 import com.example.djinoworld.djinoworld.dto.UserResponseDTO;
@@ -22,6 +24,9 @@ public class EventService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     // Crud create, read, update, delete
 
@@ -64,6 +69,29 @@ public class EventService {
     public String deleteEvent(String eventID){
         eventRepository.deleteById(eventID);
         return "This user has been deleted " + eventID;
+    }
+
+    public List<Event> filterEvents(String eventCity, String eventCountry, String eventType, String fromDate, String toDate) {
+        Criteria criteria = new Criteria();
+
+        if (eventCity != null) {
+            criteria.and("eventCity").is(eventCity);
+        }
+        if (eventCountry != null) {
+            criteria.and("eventCountry").is(eventCountry);
+        }
+        if (eventType != null) {
+            criteria.and("eventType").is(eventType);
+        }
+        if (fromDate != null && toDate != null) {
+            criteria.andOperator(
+                    Criteria.where("eventDate").gte(fromDate),
+                    Criteria.where("eventDate").lte(toDate)
+            );
+        }
+
+        Query query = new Query(criteria);
+        return mongoTemplate.find(query, Event.class);
     }
 
 

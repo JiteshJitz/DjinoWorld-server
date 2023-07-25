@@ -42,4 +42,13 @@ public class EventController {
         return service.getEventCoordinatorAndEventsInfo(coordinatorID);
     }
 
+    @GetMapping("/filter")
+    public List<Event> filterEvents(@RequestParam(required = false) String eventCity,
+                                    @RequestParam(required = false) String eventCountry,
+                                    @RequestParam(required = false) String eventType,
+                                    @RequestParam(required = false) String fromDate,
+                                    @RequestParam(required = false) String toDate) {
+        return service.filterEvents(eventCity, eventCountry, eventType, fromDate, toDate);
+    }
+
 }

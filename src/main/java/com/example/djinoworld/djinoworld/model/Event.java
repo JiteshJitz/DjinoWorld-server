@@ -34,6 +34,12 @@ public class Event {
     private String eventName;
 
     @NonNull
+    private String eventCity;
+
+    @NonNull
+    private String eventCountry;
+
+    @NonNull
     private String eventPlace;
 
     @NonNull
