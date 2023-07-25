@@ -44,4 +44,15 @@ public class TravelPartnerController {
         return service.deleteTravelPartner(id);
     }
 
+    @GetMapping("/search")
+    public List<TravelPartner> searchTravelPartners(
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String budget,
+            @RequestParam(required = false) String accommodation) {
+
+        return service.searchTravelPartners(country, startDate, endDate, budget, accommodation);
+    }
+
 }
