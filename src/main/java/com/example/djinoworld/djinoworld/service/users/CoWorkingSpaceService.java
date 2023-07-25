@@ -1,6 +1,7 @@
 package com.example.djinoworld.djinoworld.service.users;
-
-
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import com.example.djinoworld.djinoworld.dto.CoWorkingSpaceResponseDTO;
 import com.example.djinoworld.djinoworld.model.CoWorkingSpace;
 import com.example.djinoworld.djinoworld.repository.users.CoWorkingSpaceRepository;
@@ -15,6 +16,8 @@ public class CoWorkingSpaceService {
 
     @Autowired
     private CoWorkingSpaceRepository coWorkingSpaceRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     // Crud create, read, update, delete
 
@@ -45,10 +48,19 @@ public class CoWorkingSpaceService {
                 .collect(Collectors.toList());
     }
 
+    public List<CoWorkingSpace> filterCoWorkingSpaces(String address, String spaceType) {
+        Criteria criteria = new Criteria();
 
+        if (address != null) {
+            criteria.and("address").is(address);
+        }
+        if (spaceType != null) {
+            criteria.and("spaceType").is(spaceType);
+        }
 
-
-
+        Query query = new Query(criteria);
+        return mongoTemplate.find(query, CoWorkingSpace.class);
+    }
 
 
 }

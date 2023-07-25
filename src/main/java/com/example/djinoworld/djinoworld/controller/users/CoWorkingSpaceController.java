@@ -46,5 +46,11 @@ public class CoWorkingSpaceController {
         return userService.getUserAndCoWorkingSpacesInfo(userId);
     }
 
+    @GetMapping("/filter")
+    public List<CoWorkingSpace> filterCoWorkingSpaces(@RequestParam(required = false) String address,
+                                                      @RequestParam(required = false) String spaceType) {
+        return service.filterCoWorkingSpaces(address, spaceType);
+    }
+
 
 }
