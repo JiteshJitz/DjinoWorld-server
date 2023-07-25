@@ -55,4 +55,12 @@ public class AccommodationController {
         return userService.getUserAndAccommodationInfo(userId);
     }
 
+    @GetMapping("/filter")
+    public List<Accommodation> filterAccommodations(@RequestParam(required = false) String address,
+                                                    @RequestParam(required = false) Double minPrice,
+                                                    @RequestParam(required = false) Double maxPrice,
+                                                    @RequestParam(required = false) String accommodationType) {
+        return service.filterAccommodations(address, minPrice, maxPrice, accommodationType);
+    }
+
 }
