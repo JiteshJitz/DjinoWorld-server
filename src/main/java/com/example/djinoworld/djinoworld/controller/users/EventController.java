@@ -1,5 +1,6 @@
 package com.example.djinoworld.djinoworld.controller.users;
 
+import com.example.djinoworld.djinoworld.dto.EventCoordinatorEventsInfo;
 import com.example.djinoworld.djinoworld.model.Event;
 import com.example.djinoworld.djinoworld.service.users.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ public class EventController {
     @DeleteMapping
     public String deleteEvent(String eventID){
         return service.deleteEvent(eventID);
+    }
+
+    @GetMapping("/info/{coordinatorID}")
+    public EventCoordinatorEventsInfo getEventCoordinatorAndEventsInfo(@PathVariable String coordinatorID) {
+        return service.getEventCoordinatorAndEventsInfo(coordinatorID);
     }
 
 }
