@@ -13,11 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Amazon Corretto 17 JDK
+      - name: Set up 17 JDK
         uses: actions/setup-java@v2
         with:
-          java-version: corretto-17
-          distribution: amazon
+          java-version: '17'
           java-package: jdk
           architecture: x64
           check-latest: false
