@@ -21,8 +21,18 @@ public class AccommodationService {
     // Crud create, read, update, delete
 
     public Accommodation addAccommodation(Accommodation accommodation) {
-        accommodation.setAccommodationID(UUID.randomUUID().toString());
-        return accommodationRepository.save(accommodation);
+        // Here, we use the @RequiredArgsConstructor generated constructor
+        Accommodation newAccommodation = new Accommodation(accommodation.getOwnerID(),
+                                                            accommodation.getResidenceName(),
+                                                            accommodation.getAddress(),
+                                                            accommodation.getCity(),
+                                                            accommodation.getCountry(),
+                                                            accommodation.getAccommodationType(),
+                                                            accommodation.getDescription(),
+                                                            accommodation.getPrice(),
+                                                            accommodation.getPhoneNumber());
+        newAccommodation.setAccommodationID(UUID.randomUUID().toString());
+        return accommodationRepository.save(newAccommodation);
     }
 
     public List<Accommodation> findAllAccommodation() {

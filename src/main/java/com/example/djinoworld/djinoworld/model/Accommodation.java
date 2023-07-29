@@ -1,9 +1,6 @@
 package com.example.djinoworld.djinoworld.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +9,8 @@ import java.util.List;
 
 @Document(collection = "Accommodation")
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class Accommodation {
