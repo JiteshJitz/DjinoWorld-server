@@ -38,32 +38,7 @@ jobs:
         with:
           host: ec2-3-99-182-61.ca-central-1.compute.amazonaws.com
           username: ec2-user
-          key: |
-            MIIEogIBAAKCAQEAg3tygR7f7kVfqOfz8MBGYj5QipVqTSfzGOfDxKYsbYQld8FZ
-            sTZaS9fqgLHL+lvamcgpQzr8PZQ7Sgwcs/bBpNd6vpvBO6jvgkw0ftQciYZ798Sk
-            /4kBOCuVwtaHVb/av6YvRqpWoME64Gsl9ptKgvxlfaN1rJVoNM8r5HJtIeETRvEb
-            5Diew5vI3fvv6Gb5lJ4oMSDChqz/eMlgql2WG23TRLmpGdoD7AX/hbH5dkUfPc4J
-            /8lx9IDdTWuFEMUrNd9C5rjGdHKL53cu9hBBi6mddJ5ffCJCzCkEBiadUp89O9Ai
-            aox/2SBmmqlCnfeEgnw1FELO/AwfQva20d4QSwIDAQABAoIBADGi195g7n7AF9Xn
-            AxN/MtMB3VwD/iZ0j3R2glRpu1n4ykBEcPzSnRIGyBOfi3bPWF43z0P/L5x7qkpQ
-            +kECRaZaZo8ws6k3JHwXErZSkxdj+sbVqMiDSz+OTLJKVLsNe6JgNXbC9YMoj3aL
-            XMCVbXK3oATnQZROrxFIqLRMcmCYUhrftRs+cYM4cD8A84wDspP8/1X1uE6v3OZZ
-            H7frPNqPp4rJqan4UqD9vMdhv39hojIgcHlpYfQN/vhfDEPBs3XmZJb1kSAYS2yw
-            v+hNRGSJXN6om7+8WhMxJjYuXuBNPJV+FssYha18rG5kDbrH58K9xiTmiJKjKW5M
-            U5+3WzECgYEAvZNQ8rIyJ8v65nC3ORyow28+rneUlCuqrr2X9t3807tw57P3/geX
-            AoiHEEKh/K090VhAaLaEMXXgUqzSI6qtNkjTFunxBNUGYbb3Bn7QBi4+2TkJmbgT
-            nRH/L1fAU2WDquy/PuNBQFZr8jLhoMU3tV0X2HhcSINCQJq8Hye3ZqMCgYEAsY09
-            TdMyplcaQJTtW3jMH1LFP0YfwAI/wD2jz6qDFVH2VppGGOvFMrCWyYuR9bd/wAIQ
-            RHvWuCpxXk52gPsAHVNXaV0EmNPGZbePjxFuxDLCEm0hAP1ZPgWfiUxqepJfOQFH
-            dPolAddXYey0ilbtP5ph2+IENNyZsUepNxK4UjkCgYAXCL5OLt6vPTaoJ0vr8ZKD
-            5JFuK3NvKXscrka3pTNiGqVWUeSxBgUQNryKej4qcHZRaHKzBnI7fEIcaYlC8isH
-            rIORhi1V0/hpiQysyl3GUnoqdKa4+cfQTu59tyDUQUJlU0zNfFliUt3c2NfXa/8f
-            10bdc4pq+R/kr6hp9K5xFwKBgB9iyUB1ohF3ekOKT/8IdoTe+9E4kyo8+4n/G3L9
-            QFjHeVVLxjJnkx9nye/sxSt7eZC2jKuefJFnp0y1cAtS021bqysL72EYpoyaiz0O
-            Jtd15YqeUeQ75Meq9M2vfW8Xas/H4xrRkTMnHuJHlo6R2TSSFNRqurWhfWWyNj5v
-            B7g5AoGACFWekocXoOyLuJ34zDwlRj/5iLS8lZcZXTTrO64Q0+wFWVvRXgeA7nN+
-            TtaWzPACRYYbYLahBxwJFEW5a/bf46dtgdcVQj1o8CEZPMyjfZL10sj9QasfFJ57
-            eI9xZ7PaSh1llCWraXvMyaQv9DXeb9rzp9QFAhJBenVxa/cWpco=
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             docker pull djinoworld-app:${{ github.sha }}
             docker run -d --name djinoworld-container -p 8080:8080 djinoworld-app:${{ github.sha }}
