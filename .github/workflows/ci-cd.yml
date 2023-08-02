@@ -31,7 +31,7 @@ jobs:
         run: mvn clean package
 
       - name: Login to Docker Hub
-        run: echo "${{ "#Jitesh18" }}" | docker login -u "${{ "jiteshru" }}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and Push Docker image
         run: |
