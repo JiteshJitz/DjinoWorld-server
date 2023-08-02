@@ -36,7 +36,7 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ec2-3-99-182-61.ca-central-1.compute.amazonaws.com
+          host: ec2-35-183-26-184.ca-central-1.compute.amazonaws.com
           username: ec2-user
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
