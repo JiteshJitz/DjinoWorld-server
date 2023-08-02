@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface CoWorkingSpaceRepository extends MongoRepository<CoWorkingSpace,String> {
     List<CoWorkingSpace> findByOwnerId(String ownerId);
+    //
 
 }
