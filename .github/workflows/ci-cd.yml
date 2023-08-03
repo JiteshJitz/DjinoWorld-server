@@ -46,5 +46,9 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
+            if [ $(docker ps -q -f name=djinoworld-container) ]; then
+              docker stop djinoworld-container
+              docker rm djinoworld-container
+            fi
             docker pull docker.io/jiteshru/djinoworld-app:${{ github.sha }}
             docker run -d --name djinoworld-container -p 8080:8080 docker.io/jiteshru/djinoworld-app:${{ github.sha }}
