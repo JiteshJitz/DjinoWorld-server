@@ -4,4 +4,6 @@
 # Build and test
 # Docker
 # EC2
+# Access to swagger
+# S3
 
