@@ -31,8 +31,7 @@ public class AccommodationServiceTest {
     @MockBean
     private AccommodationRepository accommodationRepository;
 
-    // @MockBean
-    // private MongoTemplate mongoTemplate;
+
 
     private Accommodation accommodation;
 
