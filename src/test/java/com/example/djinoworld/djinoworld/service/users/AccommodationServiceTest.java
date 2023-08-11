@@ -32,7 +32,7 @@ public class AccommodationServiceTest {
     private AccommodationRepository accommodationRepository;
 
 
-//
+
     private Accommodation accommodation;
 
     private String generatedAccommodationID;
