@@ -32,10 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -60,87 +57,105 @@ public class AuthController {
     JwtAuthenticationProvider refreshTokenAuthProvider;
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody SignupDTO signupDTO) {
-        UserDetails existingUserByUsername = null;
+    public ResponseEntity<Map<String, Object>> register(@RequestBody SignupDTO signupDTO) {
+        Map<String, Object> response = new HashMap<>();
+
         try {
-            existingUserByUsername = userManager.loadUserByUsername(signupDTO.getUsername());
+            UserDetails existingUserByUsername = userManager.loadUserByUsername(signupDTO.getUsername());
+            if (existingUserByUsername != null) {
+                response.put("status", "error");
+                response.put("message", "Username is already in use");
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
         } catch (UsernameNotFoundException e) {
             // do nothing if user not found
         }
 
-        if (existingUserByUsername != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already in use");
-        }
-
-        UserDetails existingUserByEmail = null;
         try {
-            existingUserByEmail = userManager.loadUserByEmail(signupDTO.getEmail());
+            UserDetails existingUserByEmail = userManager.loadUserByEmail(signupDTO.getEmail());
+            if (existingUserByEmail != null) {
+                response.put("status", "error");
+                response.put("message", "Email is already in use");
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
         } catch (UsernameNotFoundException e) {
             // do nothing if user not found
-        }
-
-        if (existingUserByEmail != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
         }
 
         // If username and email do not exist, create new user
-        User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(), signupDTO.getRole(), signupDTO.getFullName(), signupDTO.getLocation());
+        User user = new User(signupDTO.getUsername(), signupDTO.getPassword(), signupDTO.getEmail(),
+                signupDTO.getRole(), signupDTO.getFullName(), signupDTO.getLocation());
+
         userDetailsManager.createUser(user);
+
         List<GrantedAuthority> authorities = new ArrayList<>(user.getAuthorities());
         System.out.println("authorities" + authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(user, signupDTO.getPassword(), authorities);
 
-        return ResponseEntity.ok(tokenGenerator.createToken(authentication));
+        TokenDTO tokenDTO = tokenGenerator.createToken(authentication);
+
+        response.put("status", "success");
+        response.put("accessToken", tokenDTO.getAccessToken());
+        response.put("refreshToken", tokenDTO.getRefreshToken());
+        return ResponseEntity.ok(response);
+
     }
 
 
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO loginDTO) {
+        Map<String, Object> response = new HashMap<>();
+
         try {
-            Authentication authentication = daoAuthenticationProvider.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
-            System.out.println("Authentication" + authentication);
+            Authentication authentication = daoAuthenticationProvider.authenticate(
+                    UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword()));
+
             if (authentication == null) {
                 throw new CustomException("Authentication object is null.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             // Retrieve the user from the database
             Optional<User> optionalUser = userRepository.findByUsername(loginDTO.getUsername());
-            System.out.println("User name " + optionalUser);
             if (optionalUser.isEmpty()) {
-                throw new CustomException("User not found.", HttpStatus.NOT_FOUND);
+                response.put("status", "error");
+                response.put("message", "User not found.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
             }
+
             User user = optionalUser.get();
 
             // Create a token with the authentication and user
             TokenDTO tokenDTO = tokenGenerator.createToken2(authentication, user);
-            System.out.println("tokenDTO" + tokenDTO);
             String refreshToken = tokenDTO.getRefreshToken();
-            System.out.println("refresh token" + refreshToken);
 
-            // Set the refresh token in the user object
+            // Set the refresh token in the user object and save it
             user.setRefreshToken(refreshToken);
-
-            // Save the user with the refresh token in the database
             userRepository.save(user);
 
-            return ResponseEntity.ok(tokenDTO);
+            response.put("status", "success");
+            response.put("accessToken", tokenDTO.getAccessToken());
+            response.put("refreshToken", tokenDTO.getRefreshToken());
+            return ResponseEntity.ok(response);
+
         } catch (AuthenticationException ex) {
             // Handle specific authentication exceptions
             if (ex instanceof DisabledException) {
-                // User account is disabled
-                throw new CustomException("Account is disabled. Please contact support.", HttpStatus.FORBIDDEN);
+                response.put("status", "error");
+                response.put("message", "Account is disabled. Please contact support.");
+                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
             } else if (ex instanceof BadCredentialsException) {
-                // Invalid credentials
-                throw new CustomException("Invalid username or password.", HttpStatus.UNAUTHORIZED);
+                response.put("status", "error");
+                response.put("message", "Invalid username or password.");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
             } else {
-                // General authentication exception
-                throw new CustomException("Authentication failed.", HttpStatus.UNAUTHORIZED);
+                response.put("status", "error");
+                response.put("message", "Authentication failed.");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
             }
         }
     }
-
 
 
 
